@@ -27,7 +27,9 @@ main h2{
 }
 
 .videos .vs-rei{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 40px;
 }
 

@@ -1,5 +1,4 @@
-
-  function eleccion(n) {  
+function eleccion(n) {  
     let video = document.getElementById("videoI");
     let videoD = document.getElementById("videoD");
     let puntajeB = document.getElementById("puntajeB");
@@ -47,13 +46,18 @@
             videoD.load(); // Recarga el video con la nueva fuente
             videoD.play(); // Opcional: inicia la reproducción automáticamente
 
+    let empate = document.getElementById("empate");
+            empate.innerHTML = "";
     puntaje(n, bot, puntajeB, puntajeJ);//Llama la funcion que hace que se sumen los puntajes
 }
 
 let contadorBot = 0, contadorPlayer = 0;//Contadores del puntaje
 function puntaje(n, bot,puntajeB,puntajeJ) {
+    
     let mensaje = document.getElementById("mensaje");
-
+    if(n === bot){
+        empate.innerHTML = "Empate";
+    }
     if (n == 1 && bot == 2||n == 2 && bot == 3||n ==3 && bot == 1) {
         contadorBot++;
     }
@@ -64,7 +68,7 @@ function puntaje(n, bot,puntajeB,puntajeJ) {
         if (contadorBot == 5) {
           mensaje.innerHTML = "Te gano la maquina";
         } else {
-            mensaje.innerHTML = "Te gano le ganastes a la maquina";
+            mensaje.innerHTML = "le ganastes a la maquina";
         }
     } 
     if (contadorBot > 5 || contadorPlayer > 5) {
@@ -77,7 +81,26 @@ function puntaje(n, bot,puntajeB,puntajeJ) {
 }
 
 function reinicio() {
+    let video = document.getElementById("videoI");
     video.src = "multimedia/aleteo1.mp4";
+    video.autoplay = true;
+    video.loop = true;
+    video.load();
+    video.play();
+
+    let videoD = document.getElementById("videoD");
+    videoD.src = "multimedia/aleteo2.mp4";
+    videoD.autoplay = true;
+    videoD.loop = true;
+    videoD.load();
+    videoD.play(); 
+
+
+    let puntajeB = document.getElementById("puntajeB");
+    let puntajeJ = document.getElementById("puntajeA");
+    
+    puntajeB.innerHTML = 0;
+    puntajeJ.innerHTML = 0;
 }
 
 

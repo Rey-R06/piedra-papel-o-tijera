@@ -1,35 +1,46 @@
+// Mostrar el saludo con el nombre del jugador
+let saludo = document.getElementById("saludo");
+const nombre = localStorage.getItem("nombre"); // Obtener el nombre desde localStorage
+saludo.innerHTML = nombre; // Si no existe el nombre, mostrar "Jugador"
+
+// Función para hacer la elección del jugador
 function eleccion(n) {  
     let video = document.getElementById("videoI");
     let videoD = document.getElementById("videoD");
     let puntajeB = document.getElementById("puntajeB");
     let puntajeJ = document.getElementById("puntajeA");
-        switch (n) {
-            case 1:
-                video.src = "multimedia/piedraI.mp4";// Cambia a la nueva URL del video
-                break;
-            case 2:
-                video.src = "multimedia/papelI.mp4"; 
-                break;
-            case 3:
-                video.src = "multimedia/tijeraI.mp4";
-                break;
-        
-            default:
-                break;
-        }
-                video.autoplay = false;  // Quita el autoplay
-                video.loop = false;
-                video.load(); // Recarga el video con la nueva fuente
-                video.play(); // Opcional: inicia la reproducción automáticamente
-                
-    function numeroAleatorioEntre(min, max) {//Genera el numero ramdom
+    let empate = document.getElementById("empate");
+    
+    // Establecer el video según la elección del jugador
+    switch (n) {
+        case 1:
+            video.src = "multimedia/piedraI.mp4";
+            break;
+        case 2:
+            video.src = "multimedia/papelI.mp4"; 
+            break;
+        case 3:
+            video.src = "multimedia/tijeraI.mp4";
+            break;
+        default:
+            break;
+    }
+
+    video.autoplay = false;
+    video.loop = false;
+    video.load();
+    video.play();
+
+    // Generar una elección aleatoria para la máquina
+    function numeroAleatorioEntre(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    var bot = numeroAleatorioEntre(1, 3);
-    
+    let bot = numeroAleatorioEntre(1, 3);
+
+    // Establecer el video de la máquina según su elección
     switch (bot) {
         case 1:
-            videoD.src = "multimedia/piedraD.mp4"; // Cambia a la nueva URL del video
+            videoD.src = "multimedia/piedraD.mp4";
             break;
         case 2:
             videoD.src = "multimedia/papelD.mp4"; 
@@ -37,49 +48,60 @@ function eleccion(n) {
         case 3:
             videoD.src = "multimedia/tijeraD.mp4";
             break;
-    
         default:
             break;
     }
-            videoD.autoplay = false;  // Quita el autoplay
-            videoD.loop = false;//Quita el loop
-            videoD.load(); // Recarga el video con la nueva fuente
-            videoD.play(); // Opcional: inicia la reproducción automáticamente
 
-    let empate = document.getElementById("empate");
-            empate.innerHTML = "";
-    puntaje(n, bot, puntajeB, puntajeJ);//Llama la funcion que hace que se sumen los puntajes
+    videoD.autoplay = false;
+    videoD.loop = false;
+    videoD.load();
+    videoD.play();
+
+    empate.innerHTML = ""; // Limpiar cualquier mensaje previo
+    puntaje(n, bot, puntajeB, puntajeJ); // Calcular el puntaje
 }
 
-let contadorBot = 0, contadorPlayer = 0;//Contadores del puntaje
-function puntaje(n, bot,puntajeB,puntajeJ) {
-    
-    let mensaje = document.getElementById("mensaje");
-    if(n === bot){
+// Variables para llevar el puntaje
+let contadorBot = 0, contadorPlayer = 0;
+
+function puntaje(n, bot, puntajeB, puntajeJ) {
+
+    // Comparar las elecciones y actualizar los puntajes
+    if (n === bot) {
         empate.innerHTML = "Empate";
     }
-    if (n == 1 && bot == 2||n == 2 && bot == 3||n ==3 && bot == 1) {
+    if (n == 1 && bot == 2 || n == 2 && bot == 3 || n == 3 && bot == 1) {
         contadorBot++;
     }
-    if (n == 2 && bot == 1 || n == 3 && bot == 2|| n == 1 && bot ==3) {
+    if (n == 2 && bot == 1 || n == 3 && bot == 2 || n == 1 && bot == 3) {
         contadorPlayer++;
     }
-    if (contadorBot >= 5 || contadorPlayer >= 5) {
-        if (contadorBot == 5) {
-          mensaje.innerHTML = "Te gano la maquina";
-        } else {
-            mensaje.innerHTML = "le ganastes a la maquina";
-        }
-    } 
-    if (contadorBot > 5 || contadorPlayer > 5) {
-        contadorBot = "-";
-        contadorPlayer = "-";
-    }
-        puntajeB.innerHTML = contadorBot;
-        puntajeJ.innerHTML = contadorPlayer;
+
+    // Actualizar los puntajes en pantalla
+    puntajeB.innerHTML = contadorBot;
+    puntajeJ.innerHTML = contadorPlayer;
+
+    ganador(contadorPlayer, contadorBot);
     
+    // Resetear el puntaje después de una victoria
+    if (contadorBot > 5 || contadorPlayer > 5) {
+        contadorBot = 0;
+        contadorPlayer = 0;
+        puntajeB.innerHTML = "0";
+        puntajeJ.innerHTML = "0";
+    }
 }
 
+function ganador(puntajeJ, puntajeB) {
+    if (puntajeJ == 5) {
+        saludo.innerHTML = "le ganastes a la maquina "+ nombre;
+    } 
+    if(puntajeB == 5) {
+        saludo.innerHTML = "te gano la maquina "+ nombre;
+    }
+}
+
+// Función para reiniciar el juego
 function reinicio() {
     let video = document.getElementById("videoI");
     video.src = "multimedia/aleteo1.mp4";
@@ -93,14 +115,15 @@ function reinicio() {
     videoD.autoplay = true;
     videoD.loop = true;
     videoD.load();
-    videoD.play(); 
+    videoD.play();
 
-
+    // Resetear los puntajes
     let puntajeB = document.getElementById("puntajeB");
     let puntajeJ = document.getElementById("puntajeA");
-    
+
+    contadorBot = 0;
+    contadorPlayer = 0;
     puntajeB.innerHTML = 0;
     puntajeJ.innerHTML = 0;
 }
-
 

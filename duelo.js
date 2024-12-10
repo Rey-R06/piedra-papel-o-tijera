@@ -2,6 +2,7 @@
 let saludo = document.getElementById("saludo");
 const nombre = localStorage.getItem("nombre"); // Obtener el nombre desde localStorage
 saludo.innerHTML = nombre; // Si no existe el nombre, mostrar "Jugador"
+let bienvenido = document.getElementById("bienvenido");
 
 // Función para hacer la elección del jugador
 function eleccion(n) {  
@@ -89,14 +90,18 @@ function puntaje(n, bot, puntajeB, puntajeJ) {
         contadorPlayer = 0;
         puntajeB.innerHTML = "0";
         puntajeJ.innerHTML = "0";
+        saludo.innerHTML = "Quien ganara?";
     }
 }
 
+
 function ganador(puntajeJ, puntajeB) {
     if (puntajeJ == 5) {
+        bienvenido.innerHTML = "";
         saludo.innerHTML = "le ganastes a la maquina "+ nombre;
     } 
     if(puntajeB == 5) {
+        bienvenido.innerHTML = "";
         saludo.innerHTML = "te gano la maquina "+ nombre;
     }
 }
@@ -120,6 +125,8 @@ function reinicio() {
     // Resetear los puntajes
     let puntajeB = document.getElementById("puntajeB");
     let puntajeJ = document.getElementById("puntajeA");
+
+    saludo.innerHTML = "Quien ganara?";
 
     contadorBot = 0;
     contadorPlayer = 0;

@@ -1,8 +1,18 @@
 // Mostrar el saludo con el nombre del jugador
 let saludo = document.getElementById("saludo");
-const nombre = localStorage.getItem("nombre"); // Obtener el nombre desde localStorage
-saludo.innerHTML = nombre; // Si no existe el nombre, mostrar "Jugador"
+let compararJugador = localStorage.getItem("nombre");
+let jugadores = JSON.parse(localStorage.getItem("jugadores"));// Obtener el nombre desde localStorage
+let idjugadorActual;
+// Variables para llevar el puntaje
+let contadorBot = 0, contadorPlayer = 0;
+for (let i = 0; i < jugadores.length; i++) {
+    if (jugadores[i].nombre == compararJugador) {
+        idjugadorActual = i;
+    } 
+}
+        saludo.innerHTML = jugadores[idjugadorActual].nombre;
 let bienvenido = document.getElementById("bienvenido");
+
 
 // Función para hacer la elección del jugador
 function eleccion(n) {  
@@ -11,6 +21,9 @@ function eleccion(n) {
     let puntajeB = document.getElementById("puntajeB");
     let puntajeJ = document.getElementById("puntajeA");
     let empate = document.getElementById("empate");
+    if (contadorBot == 5 || contadorPlayer == 5) {
+        return;
+    }
     
     // Establecer el video según la elección del jugador
     switch (n) {
@@ -62,9 +75,6 @@ function eleccion(n) {
     puntaje(n, bot, puntajeB, puntajeJ); // Calcular el puntaje
 }
 
-// Variables para llevar el puntaje
-let contadorBot = 0, contadorPlayer = 0;
-
 function puntaje(n, bot, puntajeB, puntajeJ) {
 
     // Comparar las elecciones y actualizar los puntajes
@@ -84,27 +94,29 @@ function puntaje(n, bot, puntajeB, puntajeJ) {
 
     ganador(contadorPlayer, contadorBot);
     
-    // Resetear el puntaje después de una victoria
-    if (contadorBot > 5 || contadorPlayer > 5) {
-        contadorBot = 0;
-        contadorPlayer = 0;
-        puntajeB.innerHTML = "0";
-        puntajeJ.innerHTML = "0";
-        saludo.innerHTML = "Quien ganara?";
-    }
 }
 
 
+// Función que maneja la lógica del ganador
 function ganador(puntajeJ, puntajeB) {
-    if (puntajeJ == 5) {
+    // Verificar si el jugador ha ganado
+    if (puntajeJ === 5) {
         bienvenido.innerHTML = "";
-        saludo.innerHTML = "le ganastes a la maquina "+ nombre;
-    } 
-    if(puntajeB == 5) {
+        saludo.innerHTML = "¡Le ganaste a la máquina, " + jugadores[idjugadorActual].nombre + "!";
+        jugadores[idjugadorActual].victorias = (jugadores[idjugadorActual].victorias || 0) + 1; // Incrementamos las victorias
+        localStorage.setItem('jugadores', JSON.stringify(jugadores)); // Guardar en localStorage
+    }
+
+    // Verificar si el bot ha ganado
+    if (puntajeB === 5) {
         bienvenido.innerHTML = "";
-        saludo.innerHTML = "te gano la maquina "+ nombre;
+        saludo.innerHTML = "Te ganó la máquina, " + jugadores[idjugadorActual].nombre;
+        jugadores[idjugadorActual].Derrotas = (jugadores[idjugadorActual].Derrotas || 0) + 1; // Incrementamos las derrotas
+        localStorage.setItem('jugadores', JSON.stringify(jugadores)); // Guardar en localStorage
     }
 }
+
+
 
 // Función para reiniciar el juego
 function reinicio() {
@@ -134,3 +146,13 @@ function reinicio() {
     puntajeJ.innerHTML = 0;
 }
 
+/*
+// Crear una nueva fila (<tr>)
+let nuevotr = document.createElement('tr');
+
+// Agregar contenido HTML dentro de la fila (<tr>) con celdas (<td>)
+nuevotr.innerHTML = '<td>nombre</td> <td>puntaje</td>';
+
+// Suponiendo que ya tienes una tabla con id 'miTabla', agregamos la nueva fila a la tabla
+let tabla = document.getElementById('miTabla');
+tabla.appendChild(nuevotr);*/

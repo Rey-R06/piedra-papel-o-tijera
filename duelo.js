@@ -1,17 +1,78 @@
-// Mostrar el saludo con el nombre del jugador
-let saludo = document.getElementById("saludo");
-let compararJugador = localStorage.getItem("nombre");
-let jugadores = JSON.parse(localStorage.getItem("jugadores"));// Obtener el nombre desde localStorage
-let idjugadorActual;
-// Variables para llevar el puntaje
-let contadorBot = 0, contadorPlayer = 0;
+let saludo = document.getElementById("saludo");// Mostrar el saludo con el nombre del jugador
+
+let contadorBot = 0, contadorPlayer = 0;// Variables para llevar el puntaje
+
+let compararJugador = localStorage.getItem("nombre");// Obtener el nombre que ingresa en el main desde localStorage
+
+let jugadores = JSON.parse(localStorage.getItem("jugadores"));// Obtenemos el arrey de objetos jugadores
+
+let idjugadorActual;//Esto es para obtener el id del jugador que esta actualmente jugando
+
+//Aqui es donde obtenemos el jugador actual
 for (let i = 0; i < jugadores.length; i++) {
     if (jugadores[i].nombre == compararJugador) {
         idjugadorActual = i;
     } 
 }
-        saludo.innerHTML = jugadores[idjugadorActual].nombre;
+
+saludo.innerHTML = jugadores[idjugadorActual].nombre;//Agrega al html un saludo con el nombre del jugador actual
+
+//traemos un h2 que tiene el id bienvenido y lo asignamos a una variable
 let bienvenido = document.getElementById("bienvenido");
+
+
+
+let estadisticas = document.getElementById("estadisticas");
+
+estadisticas.addEventListener("click", verEstadisticas);
+
+
+let mostrar = 1;
+let contenedor = document.getElementById("contenedor");
+function verEstadisticas() {
+    
+    if (mostrar == 1) { 
+        contenedor.style.display = "none";  // Ocultar el contenedor
+        contenedor.style.visibility = "hidden"; 
+        estadisticas.innerText = "Ver estadisticas";
+        mostrar = 2;  // Cambiar el estado para indicar que está visible
+    } else {
+        contenedor.style.display = "block";  // Mostrar el contenedor
+        contenedor.style.visibility = "visible";
+        estadisticas.innerText = "Ocultar estadisticas";
+        mostrar = 1;  // Cambiar el estado para indicar que está oculto
+    }
+}
+
+//traemos una tabla que tiene el id tabla y lo asignamos a una variable
+let tabla = document.getElementById("tabla");
+//Esto es para que se cargue la tabla de estadisticas desde que entre el usuario
+//Arreglar problema que se nota cuando entres en la pagina
+document.addEventListener('DOMContentLoaded', agregarEstadisticas);
+
+//Esta funcion agrega a la tabla los jugadores(nombre, victorias y derrotas) que tengamos en el arrey de objetos que tenemos en el localStorage
+function agregarEstadisticas() {
+    // Iterar sobre el array de jugadores
+    for (let i = 0; i < jugadores.length; i++) {
+        //obteniendo los nombres
+        let nombre = jugadores[i].nombre;
+        //obteniendo las victorias
+        let victorias = jugadores[i].victorias;
+        //obteniendo las derrotas
+        let derrotas = jugadores[i].derrotas;  // Asegúrate de que la propiedad sea 'Derrotas' (si es así en tu array)
+
+        // Crea una nueva fila (<tr>)
+        let nuevotr = document.createElement('tr');
+
+        // Agrega las estadisticas obtenidas en el HTML dentro de la fila (<tr>) con celdas (<td>)
+        nuevotr.innerHTML = `<td id="jugador${i}">${nombre}</td><td id="victorias${i}">${victorias}</td><td id="derrotas${i}">${derrotas}</td>`;
+
+
+        // Agregar la nueva fila a la tabla
+        tabla.appendChild(nuevotr);
+    }
+}
+
 
 
 // Función para hacer la elección del jugador
@@ -40,8 +101,10 @@ function eleccion(n) {
             break;
     }
 
+    //hacemos que se pare el video para que muestre el resultado
     video.autoplay = false;
     video.loop = false;
+    //cargan la eleccion
     video.load();
     video.play();
 
@@ -65,9 +128,10 @@ function eleccion(n) {
         default:
             break;
     }
-
+    //hacemos que se pare el video para que muestre el resultado
     videoD.autoplay = false;
     videoD.loop = false;
+    //cargan la eleccion
     videoD.load();
     videoD.play();
 
@@ -92,8 +156,7 @@ function puntaje(n, bot, puntajeB, puntajeJ) {
     puntajeB.innerHTML = contadorBot;
     puntajeJ.innerHTML = contadorPlayer;
 
-    ganador(contadorPlayer, contadorBot);
-    
+    ganador(contadorPlayer, contadorBot);//Enviamos los puntajes a una funcion para que determine si alguien gano
 }
 
 
@@ -101,58 +164,56 @@ function puntaje(n, bot, puntajeB, puntajeJ) {
 function ganador(puntajeJ, puntajeB) {
     // Verificar si el jugador ha ganado
     if (puntajeJ === 5) {
-        bienvenido.innerHTML = "";
-        saludo.innerHTML = "¡Le ganaste a la máquina, " + jugadores[idjugadorActual].nombre + "!";
+        let victorias = document.getElementById("victorias"+idjugadorActual);
+        //Obtener el valor actual de victorias (debe ser un número, así que lo convertimos a entero)
+        let victoriasActuales = parseInt(victorias.textContent) || 0;  // Aseguramos que sea un número
+
+        // Actualizar el contenido de la celda con el nuevo valor
+        victoriasActuales += 1;
+        //Y mandarlo
+        victorias.textContent = victoriasActuales;
+
+        bienvenido.innerHTML = "";//vaciamos el h2 de vienvenida del html
+
+        saludo.innerHTML = "¡Le ganaste a la máquina, " + jugadores[idjugadorActual].nombre + "!";//mensaje de que le gano a la maquina
+
         jugadores[idjugadorActual].victorias = (jugadores[idjugadorActual].victorias || 0) + 1; // Incrementamos las victorias
+
         localStorage.setItem('jugadores', JSON.stringify(jugadores)); // Guardar en localStorage
     }
 
     // Verificar si el bot ha ganado
     if (puntajeB === 5) {
-        bienvenido.innerHTML = "";
-        saludo.innerHTML = "Te ganó la máquina, " + jugadores[idjugadorActual].nombre;
-        jugadores[idjugadorActual].Derrotas = (jugadores[idjugadorActual].Derrotas || 0) + 1; // Incrementamos las derrotas
+        let derrotas = document.getElementById("derrotas"+idjugadorActual);
+        //Obtener el valor actual de derrotas (debe ser un número, así que lo convertimos a entero)
+        let derrotasActuales = parseInt(derrotas.textContent) || 0;  // Aseguramos que sea un número
+        // Actualizar el contenido de la celda con el nuevo valor
+        derrotasActuales += 1;
+        //y mandarlo
+        derrotas.textContent = derrotasActuales;
+        
+        bienvenido.innerHTML = "";//vaciamos el h2 de vienvenida del html
+        
+        saludo.innerHTML = "Te ganó la máquina, " + jugadores[idjugadorActual].nombre;//mensaje de que te gano la maquina
+
+        jugadores[idjugadorActual].derrotas = (jugadores[idjugadorActual].derrotas || 0) + 1; // Incrementamos las derrotas
+
         localStorage.setItem('jugadores', JSON.stringify(jugadores)); // Guardar en localStorage
     }
 }
 
+//traemos un boton que tiene el id reinicio y lo asignamos a una variable
+let reinicio = document.getElementById("reinicio");
 
+//Este evento hara que cuando se haga click en ek boton de reinicio del html
+//se regresan a 0 los puntajes
+reinicio.addEventListener('click', reiniciar);
+
+//Este evento hara que cuando se haga click en ek boton de reinicio del html
+//se actualiza la tabla en el html
+reinicio.addEventListener('click', agregarEstadisticas);
 
 // Función para reiniciar el juego
-function reinicio() {
-    let video = document.getElementById("videoI");
-    video.src = "multimedia/aleteo1.mp4";
-    video.autoplay = true;
-    video.loop = true;
-    video.load();
-    video.play();
-
-    let videoD = document.getElementById("videoD");
-    videoD.src = "multimedia/aleteo2.mp4";
-    videoD.autoplay = true;
-    videoD.loop = true;
-    videoD.load();
-    videoD.play();
-
-    // Resetear los puntajes
-    let puntajeB = document.getElementById("puntajeB");
-    let puntajeJ = document.getElementById("puntajeA");
-
-    saludo.innerHTML = "Quien ganara?";
-
-    contadorBot = 0;
-    contadorPlayer = 0;
-    puntajeB.innerHTML = 0;
-    puntajeJ.innerHTML = 0;
+function reiniciar() {
+    location.reload();
 }
-
-/*
-// Crear una nueva fila (<tr>)
-let nuevotr = document.createElement('tr');
-
-// Agregar contenido HTML dentro de la fila (<tr>) con celdas (<td>)
-nuevotr.innerHTML = '<td>nombre</td> <td>puntaje</td>';
-
-// Suponiendo que ya tienes una tabla con id 'miTabla', agregamos la nueva fila a la tabla
-let tabla = document.getElementById('miTabla');
-tabla.appendChild(nuevotr);*/

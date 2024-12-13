@@ -29,7 +29,7 @@ function jugadores(nombre) {
 
     if (!jugadorExistente) {
         // Si el jugador no existe, lo agregamos al array con 1 victoria y 5 puntos
-        jugadores.push({ nombre: nombre, victorias: 0, Derrotas: 0});
+        jugadores.push({ nombre: nombre, victorias: 0, derrotas: 0});
     }
 
     // Guardamos el array actualizado de jugadores en localStorage

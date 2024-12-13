@@ -14,8 +14,14 @@ header{
     color: #FFFFFF;
 }
 
+.contenedor{
+    visibility: visible;
+    display: block;
+}
+
 .tabla{
     position: absolute;
+    background: #333333;
     right: 50px;
     top: 20px;
     border: #FFFFFF 1px solid;

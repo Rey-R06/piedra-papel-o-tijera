@@ -9,18 +9,16 @@
 <body>
     <header>
         <h1>Piedra, papel o tijera</h1>
-        <div class="contenedor">
-        <table class="tabla">
+        <button id="estadisticas">Ocultar estadisticas</button>
+        <div class="contenedor" id="contenedor">
+        <table class="tabla" id="tabla">
             <tr>
-                <th colspan="4">Mas victorias</th>
+                <th colspan="4">Estadisticas</th>
             </tr>
             <tr>
                 <th>Nombre</th>
                 <th>Victorias</th>
-            </tr>
-            <tr>
-                <td id="namee"></td>
-                <td id="victorias"></td>
+                <th>Derrotas</th>
             </tr>
         </table>
         </div>
@@ -38,7 +36,7 @@
             <div class="vs-rei">
                 <p id="empate"></p>
                 <h2>VS</h2>
-                <button class="reinicio" onclick="reinicio()"><img src="/multimedia/reset.png"></button>
+                <button class="reinicio" id="reinicio"><img src="/multimedia/reset.png"></button>
             </div>
             <p id="puntajeB">-</p>
             <video id="videoD" src="/multimedia/aleteo2.mp4" autoplay loop></video>
